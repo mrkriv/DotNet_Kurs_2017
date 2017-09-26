@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:UserManager" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="UserManager.MainWindow"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="415" Width="691">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
@@ -43,6 +43,36 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBox Height="23" TextWrapping="Wrap" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Grid.Row="3" Grid.Column="1"/>
+        <Grid Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="3" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Имя:" HorizontalContentAlignment="Right" Padding="5,3,10,5"/>
+            <TextBox TextWrapping="Wrap" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" />
+
+            <Label Grid.Column="3" Content="Телефон:" HorizontalContentAlignment="Right" Padding="5,3,10,5"/>
+            <TextBox TextWrapping="Wrap" Grid.Column="4" />
+
+            <Label Grid.Column="6" Content="Почта:" HorizontalContentAlignment="Right" Padding="5,3,10,5"/>
+            <TextBox TextWrapping="Wrap" Grid.Column="7" />
+
+            <Label Grid.Column="9" Content="Права:" HorizontalContentAlignment="Right" Padding="5,3,10,5"/>
+            <ComboBox Grid.Column="10" SelectedIndex="0" >
+                <System:String>Любые</System:String>
+                <System:String>Пользователь</System:String>
+                <System:String>Модератор</System:String>
+                <System:String>Админ</System:String>
+            </ComboBox>
+        </Grid>
     </Grid>
 </Window>
