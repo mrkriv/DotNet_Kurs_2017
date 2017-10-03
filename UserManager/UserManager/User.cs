@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace UserManager
 {
-    public enum UserType
+    public enum UserType : int
     {
+        None,
         User,
         Moderator,
         Admin
@@ -24,10 +25,10 @@ namespace UserManager
         {
             return new User[]
             {
-                new User() { Name = "Ivan", Phone="256884", Type = UserType.Moderator},
-                new User() { Name = "Bhamri", Phone="2755884", Type = UserType.User},
-                new User() { Name = "Vlad", Phone="174767", Type = UserType.User},
-                new User() { Name = "Nasty", Phone="4845874", Type = UserType.Admin}
+                new User() { Name = "Ivan", Phone="256884", Email="qwe@q.ru", Type = UserType.Moderator},
+                new User() { Name = "Bhamri", Phone="2755884", Email="qwe@q.ru",  Type = UserType.User},
+                new User() { Name = "Vlad", Phone="174767",  Email="1231@q.ru", Type = UserType.User},
+                new User() { Name = "Nasty", Phone="4845874",  Email="asd@q.ru", Type = UserType.Admin}
             };
         }
 

@@ -25,6 +25,19 @@ namespace UserManager
 
 
 
+        public int FilterUserType
+        {
+            get { return (int)GetValue(FilterUserTypeProperty); }
+            set { SetValue(FilterUserTypeProperty, value); }
+        }
+
+        public static readonly DependencyProperty FilterUserTypeProperty =
+            DependencyProperty.Register("FilterUserType",
+               typeof(int), typeof(MainViewModel), 
+                new PropertyMetadata(0, OnFiltreStringChange));
+
+
+
         public string FilterString
         {
             get { return (string)GetValue(FilterStringProperty); }
@@ -43,6 +56,7 @@ namespace UserManager
 
         public SimpleCommand CreateUserCommand { get; set; }
         public SimpleCommand LoadUsersCommand { get; set; }
+        public OneParamertCommand<User> EditUserCommand { get; set; }
 
         public void CreateUser()
         {
@@ -65,23 +79,42 @@ namespace UserManager
 
             CreateUserCommand = new SimpleCommand(CreateUser);
             LoadUsersCommand = new SimpleCommand(LoadUsers);
+            EditUserCommand = new OneParamertCommand<User>(EditUser);
+        }
+
+        private void EditUser(User user)
+        {
+            var window = new UserWindow
+            {
+                DataContext = new UserWindowViewModel
+                {
+                    User = user
+                }
+            };
+
+            window.Show();
         }
 
         private bool FiltreUser(object obj)
         {
             var user = obj as User;
-            
-            if(user == null)
+
+            if (user == null)
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(FilterString) || user.Name.Contains(FilterString))
+            if (!string.IsNullOrEmpty(FilterString) && !user.Name.Contains(FilterString))
             {
-                return true;
+                return false;
             }
 
-            return false;
+            if (FilterUserType != 0 && (int)user.Type != FilterUserType)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

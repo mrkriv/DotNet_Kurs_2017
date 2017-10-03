@@ -38,7 +38,14 @@
                 <DataTemplate>
                     <Grid>
                         <TextBlock Text="{Binding Name}"/>
-                        <Button Content="Edit" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Padding="15,1,15,2" UseLayoutRounding="False"/>
+                        <Button Content="Edit"
+                                HorizontalContentAlignment="Center" 
+                                HorizontalAlignment="Right" 
+                                Padding="15,1,15,2" 
+                                UseLayoutRounding="False"
+                                CommandParameter="{Binding}"
+                                Command="{Binding Mode=OneWay, 
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.EditUserCommand}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -67,7 +74,7 @@
             <TextBox TextWrapping="Wrap" Grid.Column="7" />
 
             <Label Grid.Column="9" Content="Права:" HorizontalContentAlignment="Right" Padding="5,3,10,5"/>
-            <ComboBox Grid.Column="10" SelectedIndex="0" >
+            <ComboBox Grid.Column="10" SelectedIndex="{Binding FilterUserType, UpdateSourceTrigger=PropertyChanged}">
                 <System:String>Любые</System:String>
                 <System:String>Пользователь</System:String>
                 <System:String>Модератор</System:String>

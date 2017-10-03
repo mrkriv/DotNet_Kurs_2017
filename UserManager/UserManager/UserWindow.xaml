@@ -1,0 +1,59 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:UserManager" x:Class="UserManager.UserWindow"
+        Title="UserWindow" Height="198" Width="380">
+    <Window.DataContext>
+        <local:UserWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="21"/>
+            <RowDefinition/>
+            <RowDefinition Height="31"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="125*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="30*"/>
+            </Grid.RowDefinitions>
+            <Label Content="Имя"/>
+            <Label Content="Телефон" Grid.Row="2"/>
+            <Label Content="Почта" Grid.Row="4"/>
+            <Label Content="Права" Grid.Row="6"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Name}"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Phone}"/>
+            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Email}"/>
+            <ComboBox Grid.Row="6" Grid.Column="2">
+                <System:String>Пользователь</System:String>
+                <System:String>Модератор</System:String>
+                <System:String>Админ</System:String>
+            </ComboBox>
+        </Grid>
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" CornerRadius="2">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC5C5C5" Offset="0"/>
+                    <GradientStop Color="#FFCFCFCF" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+    </Grid>
+</Window>
