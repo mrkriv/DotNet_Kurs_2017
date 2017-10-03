@@ -37,16 +37,16 @@
             <Label Content="Телефон" Grid.Row="2"/>
             <Label Content="Почта" Grid.Row="4"/>
             <Label Content="Права" Grid.Row="6"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Name}"/>
-            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Phone}"/>
-            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Email}"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding User.Phone, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged}"/>
             <ComboBox Grid.Row="6" Grid.Column="2">
                 <System:String>Пользователь</System:String>
                 <System:String>Модератор</System:String>
                 <System:String>Админ</System:String>
             </ComboBox>
         </Grid>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" CornerRadius="2">
+        <Border BorderBrush="#FFFB0101" BorderThickness="1" Grid.Row="1" CornerRadius="2">
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFC5C5C5" Offset="0"/>

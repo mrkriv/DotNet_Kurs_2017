@@ -6,7 +6,8 @@
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
-    <Grid>
+
+    <Grid Background="{StaticResource BackBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="258*"/>

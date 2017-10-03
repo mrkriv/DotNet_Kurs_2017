@@ -3,6 +3,72 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+
+            <Color x:Key="BackColor">#FF323232</Color>
+            <Color x:Key="FontColor">#FFF</Color>
+
+            <SolidColorBrush x:Key="BackBrush" Color="{StaticResource BackColor}"/>
+            <SolidColorBrush x:Key="FontBrush" Color="{StaticResource FontColor}"/>
+
+            <Style TargetType="Grid">
+                <Setter Property="Background" Value="{StaticResource BackBrush}"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{StaticResource BackBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource FontBrush}"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="Foreground" Value="{StaticResource FontBrush}"/>
+            </Style>
+            <Style TargetType="DataGrid">
+                <Setter Property="Background" Value="{StaticResource BackBrush}"/>
+            </Style>
+            
+            <Style TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="ButtonBorder" Margin="0" BorderThickness="2" Padding="10,0,10,0"> 
+                                <Border.BorderBrush>
+                                    <SolidColorBrush x:Name="ButtonBorderBrush" Color="Red"/>
+                                </Border.BorderBrush>
+                                <Label Content="{TemplateBinding Content}" HorizontalContentAlignment="Center" Padding="1"/>
+                            </Border>
+                            
+                            <ControlTemplate.Triggers>
+                                
+                                <Trigger SourceName="ButtonBorder" Property="IsMouseOver" Value="True">
+                                    
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation
+                                                    Storyboard.TargetName="ButtonBorderBrush"
+                                                    Storyboard.TargetProperty="Color"
+                                                    To="Yellow" Duration="0:0:0:.5"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation
+                                                    Storyboard.TargetName="ButtonBorderBrush"
+                                                    Storyboard.TargetProperty="Color"
+                                                    To="Red" Duration="0:0:0:5"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                    
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
