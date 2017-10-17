@@ -18,51 +18,99 @@ namespace TestConsoleApplication
 
         static void Main(string[] args)
         {
-            var v1 = new Vector(1, 2);
-            var v2 = new Vector(8, 6);
+            var testObj = new TestObject()
+            {
+                Name = "Simple name",
+                Number = 9532,
+                FloatNumber = .87f,
+                StringList = new List<string>() 
+                {  
+                    "Name1",
+                    "Name2",
+                    "Name3",
+                }
+            };
 
-            var r = new Range { From = 5, To = 3 };
+            var stringVal = Serealize(testObj);
+            Console.WriteLine(stringVal);
 
-            Console.WriteLine(VectorToString(v1));
-            Console.WriteLine(VectorToString(v2));
-            Console.WriteLine(VectorToString(r));
-
-            var v3 = VectorToString<Vector>("Y=98;");
-            Console.WriteLine(v3);
+            var v3 = Diserealize<TestObject>(stringVal);
 
             Console.ReadLine();
         }
 
-        public static T VectorToString<T>(string data)
+        public static T Diserealize<T>(string data)
         {
             var type = typeof(T);
-
+            
             var props_tuple = data.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
             var obj = Activator.CreateInstance<T>();
-
+            
             foreach (var tuple in props_tuple)
             {
                 var t = tuple.Split('=');
                 var prop = type.GetProperty(t[0]);
 
-                prop.SetValue(obj, Convert.ChangeType(t[1], prop.PropertyType));
+                var intefaces = prop.PropertyType.GetInterfaces();
+                
+                if (intefaces.Any(IsIEnumerableT))
+                {
+                    var listValues = t[1].Split(new char[] { '!' }, StringSplitOptions.RemoveEmptyEntries);
+                    var List = new List<string>();  //Activator.CreateInstance(...)
+
+                    foreach (var listItem in listValues)
+                    {
+                        List.Add(listItem);
+                    }
+
+                    prop.SetValue(obj, List);
+                }
+                else
+                {
+                    prop.SetValue(obj, Convert.ChangeType(t[1], prop.PropertyType));
+                }
             }
 
             return obj;
         }
 
-        public static string VectorToString<T>(T obj)
+        public static string Serealize<T>(T obj)
         {
             var result = "";
 
             foreach (var prop in obj.GetType().GetProperties())
             {
                 var val = prop.GetValue(obj);
-                result += string.Format("{0}={1};", prop.Name, val);
+
+                var intefaces = prop.PropertyType.GetInterfaces();
+
+                if (intefaces.Any(IsIEnumerableT))
+                {
+                    result += string.Format("{0}=", prop.Name, val);
+
+                    var ilist = val as IList<string>;
+                    foreach(var item in ilist)
+                    {
+                        result += item + "!";
+                    }
+                    result += ";";
+                }
+                else
+                {
+                    result += string.Format("{0}={1};", prop.Name, val);
+                }
             }
 
             return result;
+        }
+
+        private static bool IsIEnumerableT(Type type)
+        {
+            if (type == typeof(IList<string>))
+                return true;
+
+            return false;
         }
     }
 }
