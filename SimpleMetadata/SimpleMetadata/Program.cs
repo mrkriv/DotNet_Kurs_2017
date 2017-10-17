@@ -2,20 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Management;
 
 namespace TestConsoleApplication
 {
-    class Program
+    static class Program
     {
-        class Range
-        {
-            public float From { get; set; }
-            public float To { get; set; }
-        }
-
         static void Main(string[] args)
         {
             var testObj = new TestObject()
@@ -50,7 +45,7 @@ namespace TestConsoleApplication
             foreach (var tuple in props_tuple)
             {
                 var t = tuple.Split('=');
-                var prop = type.GetProperty(t[0]);
+                var prop = FindPropertyByName(type, t[0]);
 
                 var intefaces = prop.PropertyType.GetInterfaces();
                 
@@ -75,6 +70,27 @@ namespace TestConsoleApplication
             return obj;
         }
 
+        private static PropertyInfo FindPropertyByName(Type type, string Name)
+        {
+            foreach (var prop in type.GetProperties())
+            {
+                var displayNameAttrib = prop.GetCustomAttribute<DisplayNameAttribute>();
+
+                if (displayNameAttrib != null)
+                {
+                    if (displayNameAttrib.DisplayName == Name)
+                        return prop;
+                }
+                else
+                {
+                    if (prop.Name == Name)
+                        return prop;
+                }
+            }
+
+            return null;
+        }
+
         public static string Serealize<T>(T obj)
         {
             var result = "";
@@ -85,9 +101,22 @@ namespace TestConsoleApplication
 
                 var intefaces = prop.PropertyType.GetInterfaces();
 
+                var displayNameAttribute = prop.GetCustomAttribute<DisplayNameAttribute>();
+                var propName = prop.Name;
+
+                if (prop.GetCustomAttribute<SerealizeIgnoreAttribute>() != null)
+                {
+                    continue;
+                }
+
+                if (displayNameAttribute != null)
+                {
+                    propName = displayNameAttribute.DisplayName;
+                }
+
                 if (intefaces.Any(IsIEnumerableT))
                 {
-                    result += string.Format("{0}=", prop.Name, val);
+                    result += string.Format("{0}=", propName, val);
 
                     var ilist = val as IList<string>;
                     foreach(var item in ilist)
@@ -98,7 +127,7 @@ namespace TestConsoleApplication
                 }
                 else
                 {
-                    result += string.Format("{0}={1};", prop.Name, val);
+                    result += string.Format("{0}={1};", propName, val);
                 }
             }
 
