@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,17 +9,21 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TelegaBot.Model;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using TelegaBot.Controller;
+using TelegaBot.Data;
 
 namespace TelegaBot
 {
     public class Bot
     {
         public BotAPI API { get; set; }
+        public DBContext DB { get; set; }
         public bool IsEnable { get; set; }
 
         public Bot(string ApiKey)
         {
+            DB = DBContext.Load();
             API = new BotAPI(ApiKey);
         }
 
@@ -55,21 +60,95 @@ namespace TelegaBot
                 if (type.BaseType != typeof(ControllerBase))
                     continue;
 
-                foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                if (FaidAction(update, type))
+                    return;
+            }
+
+            API.SendMessage(update.Message.Chat, PrintHelp());
+        }
+
+        private string PrintHelp()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var type in typeof(ControllerBase).Assembly.GetTypes())
+            {
+                if (type.BaseType != typeof(ControllerBase))
+                    continue;
+
+                sb.AppendLine(PrintHelpController(type));
+            }
+
+            return sb.ToString();
+        }
+
+        private string PrintHelpController(Type controller)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                var maskAttr = method.GetCustomAttribute<MessageMaskAttribute>();
+                var descAttr = method.GetCustomAttribute<DescriptionAttribute>();
+
+                if (maskAttr != null && descAttr != null)
                 {
-                    var maskAttr = method.GetCustomAttribute<MessageMaskAttribute>();
+                    var regx = new Regex(@"\([^\)]+\)");
 
-                    if (maskAttr != null && maskAttr.Mask.IsMatch(update.Message.Text))
+                    var indexCounter = 0;
+                    var pattern = regx.Replace(maskAttr.Pattern, m => ReplaceParam(m, method, indexCounter++));
+                    pattern = pattern.Replace("\\s", " ");
+
+                    sb.AppendLine(descAttr.Desc + ":\t" + pattern);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private string ReplaceParam(Match match, MethodInfo method, int index)
+        {
+            var param = method.GetParameters()[index];
+
+            var descAttr = param.GetCustomAttribute<DescriptionAttribute>();
+
+            return $"[{descAttr.Desc}]";
+        }
+
+        private bool FaidAction(Update update, Type type)
+        {
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                var maskAttr = method.GetCustomAttribute<MessageMaskAttribute>();
+
+                if (maskAttr != null)
+                {
+                    var match = maskAttr.Mask.Match(update.Message.Text);
+
+                    if (match.Success)
                     {
-                        var controller = (ControllerBase)Activator.CreateInstance(type);
-                        controller.Bind(update, API);
-
-                        method.Invoke(controller, new object[] { });
-                        
-                        return;
+                        InvokeAction(update, type, match, method);
+                        return true;
                     }
                 }
             }
+            return false;
+        }
+        private void InvokeAction(Update update, Type type, Match match, MethodInfo method)
+        {
+            var controller = (ControllerBase) Activator.CreateInstance(type);
+            controller.Bind(update, API, DB);
+
+            var param = new List<object>();
+
+            for (var i = 1; i < match.Groups.Count; i++)
+            {
+                var t = method.GetParameters()[i - 1].ParameterType;
+                var val = Convert.ChangeType(match.Groups[i].Value, t);
+                param.Add(val);
+            }
+
+            method.Invoke(controller, param.ToArray());
         }
     }
 }

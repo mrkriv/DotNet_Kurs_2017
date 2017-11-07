@@ -33,11 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,6 +58,11 @@
     <Compile Include="BotAPI.cs" />
     <Compile Include="Controller\ControllerBase.cs" />
     <Compile Include="Controller\MainController.cs" />
+    <Compile Include="Data\Day.cs" />
+    <Compile Include="Data\DBContext.cs" />
+    <Compile Include="Data\Lesson.cs" />
+    <Compile Include="Data\Schedule.cs" />
+    <Compile Include="Data\TelegaUser.cs" />
     <Compile Include="Model\Chat.cs" />
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Settings.cs" />

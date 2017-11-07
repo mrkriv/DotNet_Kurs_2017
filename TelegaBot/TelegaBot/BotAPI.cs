@@ -24,6 +24,8 @@ namespace TelegaBot
             var url = string.Format("https://api.telegram.org/bot{0}/getUpdates?offset={1}", Key, maxUpdateID);
             var request = (HttpWebRequest)WebRequest.Create(url);
 
+            request.Timeout = 500;
+
             using (var response = (HttpWebResponse)request.GetResponseAsync().Result)
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))

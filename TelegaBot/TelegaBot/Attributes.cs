@@ -10,10 +10,21 @@ namespace TelegaBot
     public class MessageMaskAttribute : Attribute
     {
         public Regex Mask { get; set; }
+        public string Pattern { get; set; }
 
-        public MessageMaskAttribute(string pattern, RegexOptions RegexOptions = RegexOptions.None)
+        public MessageMaskAttribute(string pattern, RegexOptions regexOptions = RegexOptions.None)
         {
-            Mask = new Regex(pattern, RegexOptions);
+            Mask = new Regex(pattern, regexOptions);
+            Pattern = pattern;
+        }
+    }
+    public class DescriptionAttribute : Attribute
+    {
+        public string Desc { get; set; }
+
+        public DescriptionAttribute(string description)
+        {
+            Desc = description;
         }
     }
 }
