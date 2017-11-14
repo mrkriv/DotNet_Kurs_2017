@@ -1,9 +1,11 @@
 ﻿using GameCore.Managers;
+using Newtonsoft.Json;
 
 namespace GameCore.Objects
 {
     public abstract class GameObject
     {
+        [JsonIgnore]
         public World World { get; set; }
         public string Name { get; set; }
 

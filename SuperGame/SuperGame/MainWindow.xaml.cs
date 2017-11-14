@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace SuperGame
 {
@@ -7,11 +8,20 @@ namespace SuperGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Viewport viewport;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Grid.Children.Add(new Viewport());
+            viewport = new Viewport();
+            Grid.Children.Add(viewport);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            viewport.Close();
+            base.OnClosed(e);
         }
     }
 }

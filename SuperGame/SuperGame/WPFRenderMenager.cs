@@ -50,7 +50,7 @@ namespace SuperGame
 
             WpfCanvas.Dispatcher.BeginInvoke((ThreadStart) delegate
             {
-                ActiveCamera.Resolution = new Vector2((float) WpfCanvas.Width, (float) WpfCanvas.Height);
+                ActiveCamera.Resolution = new Vector2((float) WpfCanvas.ActualWidth, (float) WpfCanvas.ActualHeight);
 
                 foreach (var primitive in primitives)
                 {

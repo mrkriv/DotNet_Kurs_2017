@@ -7,6 +7,10 @@
              mc:Ignorable="d" 
              Background="#FF4E97FF"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Canvas x:Name="MainCanvas">
-    </Canvas>
+    <Grid>
+        <Canvas x:Name="MainCanvas"></Canvas>
+        
+        <Button Focusable="False" x:Name="ButtonLoad" Content="Load" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" Height="24" Click="ButtonLoad_Click"/>
+        <Button Focusable="False" x:Name="ButtonSave" Content="Save" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="90" Height="24" Click="Button_Click"/>
+    </Grid>
 </UserControl>

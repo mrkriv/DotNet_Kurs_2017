@@ -1,18 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
+using GameCore.Models;
 using GameCore.Objects;
 using GameCore.Render;
+using Newtonsoft.Json;
 
 namespace GameCore.Managers
 {
     public class World
     {
-        private List<GameObject> objects = new List<GameObject>();
+        private readonly List<GameObject> objects;
         private Thread simulationThread;
         private bool isSimulation;
         public IRenderManager RenderManager { get; set; }
+        public InputManager InputManager { get; set; }
+
+        public World()
+        {
+            InputManager = new InputManager();
+            objects = new List<GameObject>();
+        }
 
         public void BeginSimulation()
         {
@@ -23,7 +35,7 @@ namespace GameCore.Managers
         private void SimulationLoop()
         {
             var timer = new Stopwatch();
-            var dt = 0.0f;  //float
+            var dt = 0.0f; //float
 
             isSimulation = true;
 
@@ -42,10 +54,10 @@ namespace GameCore.Managers
                 }
                 //RenderManager?.BeginRender();
 
-                timer.Stop();
-                dt = (float)timer.Elapsed.TotalSeconds;
-
                 Thread.Sleep(16);
+
+                timer.Stop();
+                dt = (float) timer.Elapsed.TotalSeconds;
             }
         }
 
@@ -54,24 +66,39 @@ namespace GameCore.Managers
             isSimulation = false;
         }
 
-        public static World LoadWorld(string file)
+        public void LoadWorld(string file)
         {
-            var world = new World();
+            objects.Clear();
 
-            var obj = new MapObject();
-            obj.Position = new Vector2(0, 0);
-            obj.Size = new Vector2(64, 64);
-            obj.World = world;
+            if (File.Exists(file))
+            {
+                var jsonData = File.ReadAllText(file);
+                var saveModel = JsonConvert.DeserializeObject<SaveModel>(jsonData);
 
-            world.objects.Add(obj);
-            obj.OnAttachToWorld();
+                foreach (var gameObject in saveModel.Objects)
+                {
+                    AddObject(gameObject);
+                }
+            }
+        }
 
-            return world;
+        public void AddObject(GameObject gameObject)
+        {
+            gameObject.World = this;
+            objects.Add(gameObject);
+            gameObject.OnAttachToWorld();
         }
 
         public void Save(string file)
         {
-            
+            var saveModel = new SaveModel
+            {
+                Objects = objects.Select(x => x as MapObject).Where(x => x != null).ToList(),
+                Date = DateTime.Now
+            };
+
+            var jsonData = JsonConvert.SerializeObject(saveModel);
+            File.WriteAllText(file, jsonData);
         }
     }
 }
