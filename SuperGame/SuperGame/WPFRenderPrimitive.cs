@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,9 +21,18 @@ namespace SuperGame
             set
             {
                 _imageName = value;
-                
-                if (_imageName != null)
-                    ((Rectangle) WpfImage).Fill = new ImageBrush(resurceManager.LoadTextute(ImageName));
+
+                WpfImage.Dispatcher.BeginInvoke((ThreadStart) delegate
+                {
+                    if (_imageName != null)
+                    {
+                        ((Rectangle)WpfImage).Fill = new ImageBrush(resurceManager.LoadTextute(ImageName));
+                    }
+                    else
+                    {
+                        ((Rectangle) WpfImage).Fill = null;
+                    }
+                });
             }
         }
 
@@ -39,6 +49,8 @@ namespace SuperGame
             position += Position;
 
             var size = Size;// * camera.Position.Z;
+
+            position -= size / 2;
 
             Canvas.SetLeft(WpfImage, position.X);
             Canvas.SetTop(WpfImage, position.Y);

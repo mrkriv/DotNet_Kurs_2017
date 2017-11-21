@@ -91,12 +91,9 @@ namespace GameCore.Managers
         {
             ClearWorld();
 
-            AddObject(new Player
+            AddObject(new Terrain
             {
-                Size = new Vector2(128, 128),
-                Position = new Vector2(0, 0),
-                ImageName = "player\\idle_1",
-                Name = "PlayerCharacter"
+                Name = "Земля"
             });
 
             AddObject(new MapObject
@@ -105,6 +102,14 @@ namespace GameCore.Managers
                 Position = new Vector2(150, 200),
                 ImageName = "objects\\topdownTile_31",
                 Name = "Куст"
+            });
+
+            AddObject(new Player
+            {
+                Size = new Vector2(128, 128),
+                Position = new Vector2(0, 0),
+                ImageName = "player\\idle_1",
+                Name = "PlayerCharacter"
             });
         }
 
