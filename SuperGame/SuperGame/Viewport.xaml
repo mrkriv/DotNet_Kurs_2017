@@ -12,5 +12,6 @@
         
         <Button Focusable="False" x:Name="ButtonLoad" Content="Load" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" Height="24" Click="ButtonLoad_Click"/>
         <Button Focusable="False" x:Name="ButtonSave" Content="Save" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="90" Height="24" Click="Button_Click"/>
+        <Button Focusable="False" x:Name="ButtonCreate" Content="Default" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="90" Height="24" Click="ButtonCreate_Click"/>
     </Grid>
 </UserControl>

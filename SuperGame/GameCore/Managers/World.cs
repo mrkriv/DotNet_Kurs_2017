@@ -68,17 +68,51 @@ namespace GameCore.Managers
 
         public void LoadWorld(string file)
         {
-            objects.Clear();
+            ClearWorld();
 
             if (File.Exists(file))
             {
+                var jsonOpt = new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Objects
+                };
+
                 var jsonData = File.ReadAllText(file);
-                var saveModel = JsonConvert.DeserializeObject<SaveModel>(jsonData);
+                var saveModel = JsonConvert.DeserializeObject<SaveModel>(jsonData, jsonOpt);
 
                 foreach (var gameObject in saveModel.Objects)
                 {
                     AddObject(gameObject);
                 }
+            }
+        }
+
+        public void CreateDefaultWorld()
+        {
+            ClearWorld();
+
+            AddObject(new Player
+            {
+                Size = new Vector2(128, 128),
+                Position = new Vector2(0, 0),
+                ImageName = "player\\idle_1",
+                Name = "PlayerCharacter"
+            });
+
+            AddObject(new MapObject
+            {
+                Size = new Vector2(128, 128),
+                Position = new Vector2(150, 200),
+                ImageName = "objects\\topdownTile_31",
+                Name = "Куст"
+            });
+        }
+
+        public void ClearWorld()
+        {
+            while (objects.Any())
+            {
+                RemoveObject(objects.First());
             }
         }
 
@@ -89,6 +123,13 @@ namespace GameCore.Managers
             gameObject.OnAttachToWorld();
         }
 
+        public void RemoveObject(GameObject gameObject)
+        {
+            gameObject.OnDetach();
+            objects.Remove(gameObject);
+            gameObject.World = null;
+        }
+
         public void Save(string file)
         {
             var saveModel = new SaveModel
@@ -97,7 +138,13 @@ namespace GameCore.Managers
                 Date = DateTime.Now
             };
 
-            var jsonData = JsonConvert.SerializeObject(saveModel);
+            var jsonOpt = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects,
+                Formatting = Formatting.Indented
+            };
+
+            var jsonData = JsonConvert.SerializeObject(saveModel, jsonOpt);
             File.WriteAllText(file, jsonData);
         }
     }

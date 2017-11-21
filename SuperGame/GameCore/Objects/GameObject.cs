@@ -17,5 +17,9 @@ namespace GameCore.Objects
         {
             
         }
+        public virtual void OnDetach()
+        {
+            
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace SuperGame
             World = new World();
             World.RenderManager = new WPFRenderMenager(MainCanvas);
 
-            World.LoadWorld(saveFile);
+            World.CreateDefaultWorld();
 
             World.BeginSimulation();
 
@@ -62,6 +62,11 @@ namespace SuperGame
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             World.Save(saveFile);
+        }
+
+        private void ButtonCreate_Click(object sender, RoutedEventArgs e)
+        {
+            World.CreateDefaultWorld();
         }
 
         public void Close()

@@ -59,5 +59,15 @@ namespace GameCore.Objects
                 RenderPrimitive.ImageName = ImageName;
             }
         }
+
+        public override void OnDetach()
+        {
+            if (World.RenderManager != null && RenderPrimitive != null)
+            {
+                World.RenderManager.DestroyPrimitive(RenderPrimitive);
+            }
+
+            base.OnDetach();
+        }
     }
 }
