@@ -108,8 +108,14 @@ namespace GameCore.Managers
             {
                 Size = new Vector2(128, 128),
                 Position = new Vector2(0, 0),
-                ImageName = "player\\idle_1",
                 Name = "PlayerCharacter"
+            });
+
+            AddObject(new NPC
+            {
+                Size = new Vector2(128, 128),
+                Position = new Vector2(200, -150),
+                Name = "NPC1"
             });
         }
 

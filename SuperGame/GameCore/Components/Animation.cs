@@ -1,4 +1,7 @@
-﻿namespace GameCore.Render
+﻿using System;
+using GameCore.Render;
+
+namespace GameCore.Components
 {
     public class Animation
     {
@@ -20,7 +23,7 @@
             }
         }
 
-        private void SetImageByIndex(int index, IRenderPrimitive sourcePrimitive)
+        public void SetImageByIndex(int index, IRenderPrimitive sourcePrimitive)
         {
             sourcePrimitive.ImageName = string.Format(PathMask, index + 1);
             currentIndex = index;

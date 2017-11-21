@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using GameCore.Components;
 using GameCore.Render;
 
 namespace GameCore.Objects
@@ -42,6 +43,16 @@ namespace GameCore.Objects
             };
 
             Speed = 250;
+        }
+
+        public override void OnAttachToWorld()
+        {
+            base.OnAttachToWorld();
+
+            if (RenderPrimitive != null)
+            {
+                Animations["idle"].SetImageByIndex(0, RenderPrimitive);
+            }
         }
 
         public override void OnTick(float dt)
