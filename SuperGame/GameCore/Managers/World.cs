@@ -14,6 +14,7 @@ namespace GameCore.Managers
 {
     public class World
     {
+        private readonly List<GameObject> needAtachObjects;
         private readonly List<GameObject> objects;
         private Thread simulationThread;
         private bool isSimulation;
@@ -24,6 +25,7 @@ namespace GameCore.Managers
         public World()
         {
             InputManager = new InputManager();
+            needAtachObjects = new List<GameObject>();
             objects = new List<GameObject>();
             PhysicsManager = new Physics();
         }
@@ -54,14 +56,41 @@ namespace GameCore.Managers
 
                 if (RenderManager != null)
                 {
+                    RenderManager.RunInUIThread(RemoveAllDestroyObject);
+                    RenderManager.RunInUIThread(AttachAllUnattachObject);
                     RenderManager.BeginRender();
                 }
-                //RenderManager?.BeginRender();
+                else
+                {
+                    RemoveAllDestroyObject();
+                    AttachAllUnattachObject();
+                }
 
                 Thread.Sleep(16);
 
                 timer.Stop();
                 dt = (float) timer.Elapsed.TotalSeconds;
+            }
+        }
+
+        private void AttachAllUnattachObject()
+        {
+            foreach (var gameObject in needAtachObjects)
+            {
+                gameObject.OnAttachToWorld();
+                objects.Add(gameObject);
+            }
+
+            needAtachObjects.Clear();
+        }
+
+        private void RemoveAllDestroyObject()
+        {
+            var toDestroy = objects.Where(x => x.IsNeedDestroy).ToList();
+
+            foreach (var gameObject in toDestroy)
+            {
+                RemoveObject(gameObject);
             }
         }
 
@@ -134,8 +163,15 @@ namespace GameCore.Managers
         public void AddObject(GameObject gameObject)
         {
             gameObject.World = this;
-            objects.Add(gameObject);
-            gameObject.OnAttachToWorld();
+            if (simulationThread == Thread.CurrentThread)
+            {
+                needAtachObjects.Add(gameObject);
+            }
+            else
+            {
+                objects.Add(gameObject);
+                gameObject.OnAttachToWorld();
+            }
         }
 
         public void RemoveObject(GameObject gameObject)

@@ -8,6 +8,7 @@ namespace GameCore.Objects
         [JsonIgnore]
         public World World { get; set; }
         public string Name { get; set; }
+        public bool IsNeedDestroy { get; set; }
 
         public virtual void OnTick(float dt)
         {

@@ -63,7 +63,7 @@ namespace GameCore.Objects
                 RenderPrimitive.ImageName = ImageName;
             }
 
-            PhysicsModel = new PhysicsModel
+            PhysicsModel = new PhysicsSphere
             {
                 IsSatatic = true,
                 Radius = Size.Length() / 2.7f,

@@ -25,17 +25,7 @@ namespace GameCore.Managers
                     if (modelA.IsSatatic && modelB.IsSatatic)
                         continue;
 
-                    var delta = (modelA.MapObject.Position - modelB.MapObject.Position).Length();
-                    var radSum = modelA.Radius + modelB.Radius;
-
-                    if(delta >= radSum)
-                        continue;
-
-                    var firstModel = modelA.IsSatatic ? modelB : modelA;
-                    var secondModel = firstModel == modelA ? modelB : modelA;
-
-                    var deltaVec = firstModel.MapObject.Position - secondModel.MapObject.Position;
-                    firstModel.MapObject.Position -= deltaVec / deltaVec.Length() * (delta - radSum);
+                    modelA.Intersection(modelB);
                 }
             }
         }

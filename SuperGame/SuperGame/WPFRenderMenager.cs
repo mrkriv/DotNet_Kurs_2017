@@ -43,6 +43,11 @@ namespace SuperGame
             }
         }
 
+        public void RunInUIThread(Action action)
+        {
+            WpfCanvas.Dispatcher.BeginInvoke((ThreadStart)action.Invoke);
+        }
+
         public void BeginRender()
         {
             if(ActiveCamera == null)

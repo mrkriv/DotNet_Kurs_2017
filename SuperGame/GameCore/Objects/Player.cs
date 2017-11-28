@@ -8,10 +8,25 @@ namespace GameCore.Objects
 {
     public class Player : Character
     {
+        private Vector2 lastDir = new Vector2(1, 0);
+
         public override void OnTick(float dt)
         {
             var dir = new Vector2();
             var speed = Speed;
+
+            if (World.InputManager.IsKeyDown(Key.Space))
+            {
+                var bullet = new Bullet
+                {
+                    Position = Position + new Vector2(40, -30),
+                    Direction = lastDir,
+                    LiveTime = 1.5f,
+                    Owner = this,
+                    Speed = 500,
+                };
+                World.AddObject(bullet);
+            }
             
             if (World.InputManager.IsKeyDown(Key.W))
                 dir += new Vector2(0, -1);
@@ -27,9 +42,12 @@ namespace GameCore.Objects
 
             if (World.InputManager.IsKeyDown(Key.LeftShift))
                 speed *= 1.5f;
-            
+
             if (dir != Vector2.Zero)
+            {
                 dir = dir / dir.Length();
+                lastDir = dir;
+            }
 
             Velocity = dir * speed;
 

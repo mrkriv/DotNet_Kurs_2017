@@ -1,4 +1,6 @@
-﻿namespace GameCore.Render
+﻿using System;
+
+namespace GameCore.Render
 {
     public interface IRenderManager
     {
@@ -8,5 +10,7 @@
         void DestroyPrimitive(IRenderPrimitive primitive);
 
         void BeginRender();
+
+        void RunInUIThread(Action action);
     }
 }
