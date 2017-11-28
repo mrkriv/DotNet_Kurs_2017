@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using GameCore.Models;
 using GameCore.Render;
 using Newtonsoft.Json;
 
@@ -48,6 +49,9 @@ namespace GameCore.Objects
         [JsonIgnore]
         public IRenderPrimitive RenderPrimitive { get; set; }
 
+        [JsonIgnore]
+        public PhysicsModel PhysicsModel { get; set; }
+
         public override void OnAttachToWorld()
         {
             if (World.RenderManager != null)
@@ -58,10 +62,21 @@ namespace GameCore.Objects
                 RenderPrimitive.Position = Position;
                 RenderPrimitive.ImageName = ImageName;
             }
+
+            PhysicsModel = new PhysicsModel
+            {
+                IsSatatic = true,
+                Radius = Size.Length() / 2.7f,
+                MapObject = this
+            };
+
+            World.PhysicsManager.Models.Add(PhysicsModel);
         }
 
         public override void OnDetach()
         {
+            World.PhysicsManager.Models.Remove(PhysicsModel);
+
             if (World.RenderManager != null && RenderPrimitive != null)
             {
                 World.RenderManager.DestroyPrimitive(RenderPrimitive);

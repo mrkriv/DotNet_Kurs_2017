@@ -49,6 +49,8 @@ namespace GameCore.Objects
         {
             base.OnAttachToWorld();
 
+            PhysicsModel.IsSatatic = false;
+
             if (RenderPrimitive != null)
             {
                 Animations["idle"].SetImageByIndex(0, RenderPrimitive);

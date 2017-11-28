@@ -19,11 +19,13 @@ namespace GameCore.Managers
         private bool isSimulation;
         public IRenderManager RenderManager { get; set; }
         public InputManager InputManager { get; set; }
+        public Physics PhysicsManager { get; set; }
 
         public World()
         {
             InputManager = new InputManager();
             objects = new List<GameObject>();
+            PhysicsManager = new Physics();
         }
 
         public void BeginSimulation()
@@ -42,6 +44,8 @@ namespace GameCore.Managers
             while (isSimulation)
             {
                 timer.Restart();
+
+                PhysicsManager.OnTick(dt);
 
                 foreach (var gameObject in objects)
                 {
@@ -145,7 +149,7 @@ namespace GameCore.Managers
         {
             var saveModel = new SaveModel
             {
-                Objects = objects.Select(x => x as MapObject).Where(x => x != null).ToList(),
+                Objects = objects,
                 Date = DateTime.Now
             };
 

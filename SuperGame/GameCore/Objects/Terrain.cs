@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using GameCore.Render;
@@ -9,11 +10,29 @@ namespace GameCore.Objects
     {
         private IRenderPrimitive[,] primitives = new IRenderPrimitive[TerrainSize, TerrainSize];
         private const int TerrainCellSize = 128;
-        private const int TerrainSize = 32;
+        private const int TerrainSize = 16;
+
+        public List<string> Map { get; set; }
+
+        public Terrain()
+        {
+            Map = new List<string>();
+        }
 
         public override void OnAttachToWorld()
         {
-            var rand = new Random();
+            if (Map.Count == 0)
+            {
+                for (var i = 0; i < TerrainSize; i++)
+                {
+                    var row = "";
+                    for (var j = 0; j < TerrainSize; j++)
+                    {
+                        row += "25 ";
+                    }
+                    Map.Add(row);
+                }
+            }
 
             if (World.RenderManager != null)
             {
@@ -22,20 +41,14 @@ namespace GameCore.Objects
 
                 for (var i = 0; i < TerrainSize; i++)
                 {
+                    var mapRow = Map[i].Split(' ');
                     for (var j = 0; j < TerrainSize; j++)
                     {
                         var cell = World.RenderManager.CreatePrimitive();
                         cell.Size = new Vector2(TerrainCellSize + 1, TerrainCellSize + 1);
                         cell.Position = new Vector2(TerrainCellSize * i, TerrainCellSize * j) - offset;
 
-                        if (rand.NextDouble() > .8)
-                        {
-                            cell.ImageName = "terrain\\topdownTile_24";
-                        }
-                        else
-                        {
-                            cell.ImageName = "terrain\\topdownTile_25";
-                        }
+                        cell.ImageName = "terrain\\topdownTile_" + mapRow[j];
 
                         primitives[i, j] = cell;
                     }
